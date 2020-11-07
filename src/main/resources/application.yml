@@ -1,0 +1,8 @@
+bot:
+  token: ${BOT_TOKEN}
+  username: ${BOT_NAME}
+
+logging:
+  level:
+    root: INFO
+    it.minetti: DEBUG
