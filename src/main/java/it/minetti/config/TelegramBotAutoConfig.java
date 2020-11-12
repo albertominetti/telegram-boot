@@ -1,8 +1,8 @@
-package it.minetti;
+package it.minetti.config;
 
+import it.minetti.generic.UpdatesScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
@@ -17,15 +17,15 @@ import javax.annotation.PreDestroy;
 
 @Slf4j
 @Configuration
-public class TelegramBotAutoConfiguration {
+public class TelegramBotAutoConfig {
     private BotSession session;
-    private final LongPollingBot pollingBot;
-    private final TelegramWebhookBot webHookBot;
 
-    public TelegramBotAutoConfiguration(LongPollingBot pollingBot, @Autowired(required = false) TelegramWebhookBot webHookBot) {
-        this.pollingBot = pollingBot;
-        this.webHookBot = webHookBot;
-    }
+    @Autowired(required = false)
+    private LongPollingBot pollingBot;
+    @Autowired(required = false)
+    private TelegramWebhookBot webHookBot;
+    @Autowired
+    private UpdatesScheduler updatesScheduler;
 
     @PostConstruct
     public void start() throws TelegramApiException {
@@ -50,13 +50,12 @@ public class TelegramBotAutoConfiguration {
             }
         }
 
+        updatesScheduler.scheduleUpdate();
     }
 
     @Bean
-    @ConditionalOnMissingBean
     public TelegramBotsApi telegramBotsApi() throws TelegramApiException {
         TelegramBotsApi result;
-        log.info("Initializing API without webhook support");
         result = new TelegramBotsApi(DefaultBotSession.class);
         return result;
     }
