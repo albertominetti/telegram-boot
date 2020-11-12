@@ -11,19 +11,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.InputStream;
 import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 
 @Component
 public class MonkeyImageHandler implements BaseHandler {
-    public static final InputStream MONKEY_IMAGE = TelegramApiBot.class.getResourceAsStream("/images/1473231766-scimmia.jpg");
 
     @Autowired
     TelegramApiBot bot;
 
-    private static final Set<String> TRIGGER_MESSAGES = newHashSet("monkey", "scimmia");
+    private static final Set<String> TRIGGER_MESSAGES = newHashSet("monkey", "scimmia", "ape");
 
     @Override
     public boolean test(Update update, String status) {
@@ -44,6 +42,8 @@ public class MonkeyImageHandler implements BaseHandler {
         bot.execute(new SendMessage(chatId, "Me?? You are the monkey!"));
         Thread.sleep(500);
         bot.execute(new SendChatAction(chatId, "upload_photo"));
-        bot.execute(new SendPhoto(chatId, new InputFile(MONKEY_IMAGE, "you")));
+        bot.execute(new SendPhoto(chatId, new InputFile(
+                TelegramApiBot.class.getResourceAsStream("/images/1473231766-scimmia.jpg"), "monkey")
+        ));
     }
 }
