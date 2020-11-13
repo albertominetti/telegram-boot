@@ -26,7 +26,7 @@ public class PollingBotConfig {
     private UpdatesScheduler updatesScheduler;
 
     @PostConstruct
-    public void start() throws TelegramApiException {
+    public void start() throws TelegramApiException, InterruptedException {
         log.info("Starting auto config for telegram bot");
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
 
