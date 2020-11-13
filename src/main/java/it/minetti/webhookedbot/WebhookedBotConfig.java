@@ -17,7 +17,7 @@ import javax.annotation.PostConstruct;
 @Deprecated // use the PollingBot
 @Configuration
 @ConditionalOnBean(WebhookedBot.class)
-public class PollingBotConfig {
+public class WebhookedBotConfig {
 
     @Autowired
     private TelegramWebhookBot webHookBot;
