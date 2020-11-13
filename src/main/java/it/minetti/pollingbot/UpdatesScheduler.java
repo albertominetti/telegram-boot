@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
 import java.util.concurrent.BlockingQueue;
 
 @Component
-@ConditionalOnBean(PollingNoDelayBot.class)
+@ConditionalOnBean(PollingBot.class)
 public class UpdatesScheduler {
     @Autowired
     private MainHandler handler;
@@ -22,14 +22,10 @@ public class UpdatesScheduler {
     private boolean enabled = true;
 
     @Async
-    public void scheduleUpdate() {
+    public void scheduleUpdate() throws InterruptedException {
         while (enabled) {
-            try {
-                Update update = updatesQueue.take();
-                handler.handle(update);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Update update = updatesQueue.take();
+            handler.handle(update);
         }
     }
 

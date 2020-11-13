@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Configuration
-@ConditionalOnBean(PollingNoDelayBot.class)
+@ConditionalOnBean(PollingBot.class)
 public class QueueConfig {
     public static final int POOL_SIZE = 20;
 

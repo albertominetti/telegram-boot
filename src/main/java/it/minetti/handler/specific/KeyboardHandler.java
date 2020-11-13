@@ -1,7 +1,5 @@
 package it.minetti.handler.specific;
 
-import com.google.common.collect.Lists;
-import it.minetti.pollingbot.PollingNoDelayBot;
 import it.minetti.handler.BaseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,14 +11,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.InputStream;
 import java.util.Set;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
 @Component
 public class KeyboardHandler implements BaseHandler {
-    public static final InputStream MONKEY_IMAGE = PollingNoDelayBot.class.getResourceAsStream("/images/1473231766-scimmia.jpg");
 
     @Autowired
     AbsSender bot;
@@ -38,7 +35,7 @@ public class KeyboardHandler implements BaseHandler {
     }
 
     @Override
-    public void process(Update update, String status) throws TelegramApiException, InterruptedException {
+    public void process(Update update, String status) throws TelegramApiException {
         Message message = update.getMessage();
         String chatId = "" + message.getChatId();
         SendMessage response = new SendMessage(chatId, "Below your keyboard");
@@ -47,7 +44,7 @@ public class KeyboardHandler implements BaseHandler {
         keyboardRow1.add("Hello");
         KeyboardRow keyboardRow2 = new KeyboardRow();
         keyboardRow2.add("Ciao");
-        response.setReplyMarkup(new ReplyKeyboardMarkup(Lists.newArrayList(keyboardRow1, keyboardRow2)));
+        response.setReplyMarkup(new ReplyKeyboardMarkup(newArrayList(keyboardRow1, keyboardRow2)));
         bot.execute(response);
     }
 }

@@ -1,6 +1,5 @@
 package it.minetti.handler.specific;
 
-import it.minetti.pollingbot.PollingNoDelayBot;
 import it.minetti.handler.BaseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,7 +44,7 @@ public class MonkeyImageHandler implements BaseHandler {
         Thread.sleep(500);
         bot.execute(new SendChatAction(chatId, "upload_photo"));
         bot.execute(new SendPhoto(chatId, new InputFile(
-                PollingNoDelayBot.class.getResourceAsStream("/images/1473231766-scimmia.jpg"), "monkey")
+                this.getClass().getResourceAsStream("/images/1473231766-scimmia.jpg"), "monkey")
         ));
     }
 }
