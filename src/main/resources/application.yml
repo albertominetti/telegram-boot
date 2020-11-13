@@ -2,6 +2,11 @@ bot:
   token: ${BOT_TOKEN}
   username: ${BOT_NAME}
 
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+
 logging:
   level:
     root: INFO
