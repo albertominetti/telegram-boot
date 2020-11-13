@@ -1,4 +1,4 @@
-package it.minetti;
+package it.minetti.feature.entrypoint;
 
 import it.minetti.feature.Feature;
 import lombok.extern.slf4j.Slf4j;
@@ -12,25 +12,28 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Component
 public class FeaturesEntryPoint {
 
     @Autowired
-    AbsSender bot;
+    private AbsSender bot;
 
     @Autowired
-    List<Feature> features;
+    private List<Feature> features;
 
     @Async
     public void process(Update update) throws TelegramApiException {
         boolean processed = false;
 
+        Locale locale = Locale.ITALY;
+
         for (Feature feature : features) {
             try {
-                if (feature.test(update, null)) {
-                    feature.process(update, null);
+                if (feature.test(update, null, locale)) {
+                    feature.process(update, null, locale);
                     processed = true;
                     break;
                 }

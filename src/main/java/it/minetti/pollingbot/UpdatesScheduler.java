@@ -1,6 +1,6 @@
 package it.minetti.pollingbot;
 
-import it.minetti.FeaturesEntryPoint;
+import it.minetti.feature.entrypoint.FeaturesEntryPoint;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

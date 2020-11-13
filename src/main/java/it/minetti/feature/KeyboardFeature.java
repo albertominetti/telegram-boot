@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.Locale;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -24,7 +25,7 @@ public class KeyboardFeature implements Feature {
     private static final Set<String> TRIGGER_MESSAGES = newHashSet("keyboard");
 
     @Override
-    public boolean test(Update update, String status) {
+    public boolean test(Update update, String status, Locale userLocale) {
         if (status == null && update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             String text = message.getText();
@@ -34,7 +35,7 @@ public class KeyboardFeature implements Feature {
     }
 
     @Override
-    public void process(Update update, String status) throws TelegramApiException {
+    public void process(Update update, String status, Locale userLocale) throws TelegramApiException {
         Message message = update.getMessage();
         String chatId = "" + message.getChatId();
         SendMessage response = new SendMessage(chatId, "Below your keyboard");

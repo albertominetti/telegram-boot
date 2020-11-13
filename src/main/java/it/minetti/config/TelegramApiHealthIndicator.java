@@ -26,9 +26,15 @@ public class TelegramApiHealthIndicator implements HealthIndicator {
 
         try {
             OkResponse ok = template.getForObject(BASE_URL + botToken + "/getMe", OkResponse.class);
-            return (ok != null && ok.isOk())
-                    ? Health.up().build()
-                    : Health.outOfService().withDetail("error", ok).build();
+            if (ok != null && ok.isOk()) {
+                return Health.up()
+                        .build();
+            } else {
+                log.warn("Telegram bot is active: {}", ok);
+                return Health.outOfService()
+                        .withDetail("error", ok)
+                        .build();
+            }
         } catch (Exception e) {
             log.warn("Failed to connect to: {}", BASE_URL);
             return Health.down()

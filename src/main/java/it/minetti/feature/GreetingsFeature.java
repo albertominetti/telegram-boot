@@ -11,13 +11,14 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 
 @Component
 public class GreetingsFeature implements Feature {
-    private static final List<String> TRIGGER_MESSAGES = newArrayList("hello", "hi", "ciao");
 
     @Autowired
     AbsSender bot;
@@ -25,22 +26,26 @@ public class GreetingsFeature implements Feature {
     private final Random rand = new Random();
 
     @Override
-    public boolean test(Update update, String status) {
+    public boolean test(Update update, String status, Locale userLocale) {
         if (status == null && update.hasMessage() && update.getMessage().hasText()) {
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
             Message message = update.getMessage();
             String text = message.getText();
-            return TRIGGER_MESSAGES.contains(text.toLowerCase());
+            List<String> triggers = asList(bundle.getString("hello.trigger").split(","));
+            return triggers.contains(text.toLowerCase());
         }
         return false;
     }
 
     @Override
-    public void process(Update update, String status) throws TelegramApiException, InterruptedException {
+    public void process(Update update, String status, Locale userLocale) throws TelegramApiException, InterruptedException {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
         Message message = update.getMessage();
         String chatId = "" + message.getChatId();
         bot.execute(new SendChatAction(chatId, "typing"));
         Thread.sleep(200);
-        String greeting = TRIGGER_MESSAGES.get(rand.nextInt(TRIGGER_MESSAGES.size()));
+        List<String> triggers = asList(bundle.getString("hello.trigger").split(","));
+        String greeting = triggers.get(rand.nextInt(triggers.size()));
         greeting = StringUtils.capitalize(greeting) + "!";
         bot.execute(new SendMessage(chatId, greeting));
     }
