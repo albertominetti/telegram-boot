@@ -1,4 +1,4 @@
-package it.minetti.specific;
+package it.minetti.handler;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

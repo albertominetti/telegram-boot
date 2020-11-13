@@ -1,5 +1,6 @@
-package it.minetti.generic;
+package it.minetti.pollingbot;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -10,6 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Configuration
+@ConditionalOnBean(PollingNoDelayBot.class)
 public class QueueConfig {
     public static final int POOL_SIZE = 20;
 

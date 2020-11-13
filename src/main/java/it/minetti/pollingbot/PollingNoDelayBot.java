@@ -1,4 +1,4 @@
-package it.minetti;
+package it.minetti.pollingbot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +12,15 @@ import java.util.concurrent.BlockingQueue;
 
 @Component
 @Slf4j
-public class TelegramApiBot extends TelegramLongPollingBot {
+public class PollingNoDelayBot extends TelegramLongPollingBot {
     private final String token;
     private final String username;
 
     @Autowired
     private BlockingQueue<Update> updatesQueue;
 
-    public TelegramApiBot(@Value("${bot.token}") String token,
-                          @Value("${bot.username}") String username) {
+    public PollingNoDelayBot(@Value("${bot.token}") String token,
+                             @Value("${bot.username}") String username) {
         this.token = token;
         this.username = username;
     }

@@ -1,7 +1,5 @@
-package it.minetti.generic;
+package it.minetti.handler;
 
-import it.minetti.TelegramApiBot;
-import it.minetti.specific.BaseHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -9,15 +7,16 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.util.List;
 
 @Slf4j
 @Component
-public class GenericUpdateHandler {
+public class MainHandler {
 
     @Autowired
-    TelegramApiBot bot;
+    AbsSender bot;
 
     @Autowired
     List<BaseHandler> handlers;

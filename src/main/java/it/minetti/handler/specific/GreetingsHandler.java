@@ -1,6 +1,6 @@
-package it.minetti.specific;
+package it.minetti.handler.specific;
 
-import it.minetti.TelegramApiBot;
+import it.minetti.handler.BaseHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class GreetingsHandler implements BaseHandler {
     private static final List<String> TRIGGER_MESSAGES = newArrayList("hello", "hi", "ciao");
 
     @Autowired
-    TelegramApiBot bot;
+    AbsSender bot;
 
     private final Random rand = new Random();
 

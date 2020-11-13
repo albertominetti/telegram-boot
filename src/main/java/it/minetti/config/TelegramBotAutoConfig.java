@@ -1,6 +1,6 @@
 package it.minetti.config;
 
-import it.minetti.generic.UpdatesScheduler;
+import it.minetti.pollingbot.UpdatesScheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +24,7 @@ public class TelegramBotAutoConfig {
     private LongPollingBot pollingBot;
     @Autowired(required = false)
     private TelegramWebhookBot webHookBot;
-    @Autowired
+    @Autowired(required = false)
     private UpdatesScheduler updatesScheduler;
 
     @PostConstruct
@@ -50,7 +50,9 @@ public class TelegramBotAutoConfig {
             }
         }
 
-        updatesScheduler.scheduleUpdate();
+        if (updatesScheduler != null) {
+            updatesScheduler.scheduleUpdate();
+        }
     }
 
     @Bean

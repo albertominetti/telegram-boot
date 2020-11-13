@@ -1,6 +1,8 @@
-package it.minetti.generic;
+package it.minetti.pollingbot;
 
+import it.minetti.handler.MainHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -9,9 +11,10 @@ import javax.annotation.PreDestroy;
 import java.util.concurrent.BlockingQueue;
 
 @Component
+@ConditionalOnBean(PollingNoDelayBot.class)
 public class UpdatesScheduler {
     @Autowired
-    private GenericUpdateHandler handler;
+    private MainHandler handler;
 
     @Autowired
     private BlockingQueue<Update> updatesQueue;
