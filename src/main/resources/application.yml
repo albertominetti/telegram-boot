@@ -7,6 +7,10 @@ management:
     health:
       show-details: "ALWAYS"
 
+spring:
+  liquibase:
+    change-log: classpath:db/liquibase/db.changelog-master.xml
+
 logging:
   level:
     root: INFO
