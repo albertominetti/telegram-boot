@@ -8,15 +8,15 @@
 
     <changeSet author="Alberto" id="init-db">
         <createTable tableName="CHAT">
-            <column name="CHAT_ID" type="VARCHAR(16 CHAR)">
+            <column name="CHAT_ID" type="VARCHAR(16)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
 
-            <column name="STATUS" type="VARCHAR(255 CHAR)">
+            <column name="STATUS" type="VARCHAR(255)">
                 <constraints nullable="true"/>
             </column>
 
-            <column name="LOCALE" type="VARCHAR(255 CHAR)" defaultValue="en_US">
+            <column name="LOCALE" type="VARCHAR(255)" defaultValue="en_US">
                 <constraints nullable="true"/>
             </column>
         </createTable>
