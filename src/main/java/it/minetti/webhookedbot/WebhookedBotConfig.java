@@ -30,12 +30,12 @@ public class WebhookedBotConfig {
         log.info("Starting auto config for telegram bot");
         TelegramBotsApi api = new TelegramBotsApi(DefaultBotSession.class);
 
-            try {
-                log.info("Registering web hook bot: {}", webHookBot.getBotUsername());
-                api.registerBot(webHookBot, new SetWebhook(baseWebhookUrl.concat(webHookBot.getBotPath())));
-            } catch (TelegramApiException var3) {
-                log.error("Failed to register bot {} due to error", webHookBot.getBotUsername(), var3);
-            }
+        try {
+            log.info("Registering web hook bot: {}", webHookBot.getBotUsername());
+            api.registerBot(webHookBot, new SetWebhook(baseWebhookUrl.concat(webHookBot.getBotPath())));
+        } catch (TelegramApiException var3) {
+            log.error("Failed to register bot {} due to error", webHookBot.getBotUsername(), var3);
+        }
 
     }
 
