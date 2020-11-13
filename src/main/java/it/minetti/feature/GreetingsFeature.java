@@ -1,28 +1,28 @@
-package it.minetti.handler.specific;
+package it.minetti.feature;
 
-import it.minetti.handler.BaseHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Random;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Component
-public class MonkeyImageHandler implements BaseHandler {
+public class GreetingsFeature implements Feature {
+    private static final List<String> TRIGGER_MESSAGES = newArrayList("hello", "hi", "ciao");
 
     @Autowired
     AbsSender bot;
 
-    private static final Set<String> TRIGGER_MESSAGES = newHashSet("monkey", "scimmia", "ape");
+    private final Random rand = new Random();
 
     @Override
     public boolean test(Update update, String status) {
@@ -40,11 +40,8 @@ public class MonkeyImageHandler implements BaseHandler {
         String chatId = "" + message.getChatId();
         bot.execute(new SendChatAction(chatId, "typing"));
         Thread.sleep(200);
-        bot.execute(new SendMessage(chatId, "Me?? You are the monkey!"));
-        Thread.sleep(500);
-        bot.execute(new SendChatAction(chatId, "upload_photo"));
-        bot.execute(new SendPhoto(chatId, new InputFile(
-                this.getClass().getResourceAsStream("/images/1473231766-scimmia.jpg"), "monkey")
-        ));
+        String greeting = TRIGGER_MESSAGES.get(rand.nextInt(TRIGGER_MESSAGES.size()));
+        greeting = StringUtils.capitalize(greeting) + "!";
+        bot.execute(new SendMessage(chatId, greeting));
     }
 }

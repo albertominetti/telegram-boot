@@ -1,6 +1,7 @@
 package it.minetti.pollingbot;
 
-import it.minetti.handler.MainHandler;
+import it.minetti.FeaturesEntryPoint;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +15,7 @@ import java.util.concurrent.BlockingQueue;
 @ConditionalOnBean(PollingBot.class)
 public class UpdatesScheduler {
     @Autowired
-    private MainHandler handler;
+    private FeaturesEntryPoint entryPoint;
 
     @Autowired
     private BlockingQueue<Update> updatesQueue;
@@ -22,10 +23,11 @@ public class UpdatesScheduler {
     private boolean enabled = true;
 
     @Async
-    public void scheduleUpdate() throws InterruptedException {
+    @SneakyThrows
+    public void scheduleUpdate() {
         while (enabled) {
             Update update = updatesQueue.take();
-            handler.handle(update);
+            entryPoint.process(update);
         }
     }
 

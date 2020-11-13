@@ -1,29 +1,27 @@
-package it.minetti.handler.specific;
+package it.minetti.feature;
 
-import it.minetti.handler.BaseHandler;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 
 @Component
-public class GreetingsHandler implements BaseHandler {
-    private static final List<String> TRIGGER_MESSAGES = newArrayList("hello", "hi", "ciao");
+public class KeyboardFeature implements Feature {
 
     @Autowired
     AbsSender bot;
 
-    private final Random rand = new Random();
+    private static final Set<String> TRIGGER_MESSAGES = newHashSet("keyboard");
 
     @Override
     public boolean test(Update update, String status) {
@@ -36,13 +34,16 @@ public class GreetingsHandler implements BaseHandler {
     }
 
     @Override
-    public void process(Update update, String status) throws TelegramApiException, InterruptedException {
+    public void process(Update update, String status) throws TelegramApiException {
         Message message = update.getMessage();
         String chatId = "" + message.getChatId();
-        bot.execute(new SendChatAction(chatId, "typing"));
-        Thread.sleep(200);
-        String greeting = TRIGGER_MESSAGES.get(rand.nextInt(TRIGGER_MESSAGES.size()));
-        greeting = StringUtils.capitalize(greeting) + "!";
-        bot.execute(new SendMessage(chatId, greeting));
+        SendMessage response = new SendMessage(chatId, "Below your keyboard");
+        KeyboardRow keyboardRow1 = new KeyboardRow();
+        keyboardRow1.add("Hi");
+        keyboardRow1.add("Hello");
+        KeyboardRow keyboardRow2 = new KeyboardRow();
+        keyboardRow2.add("Ciao");
+        response.setReplyMarkup(new ReplyKeyboardMarkup(newArrayList(keyboardRow1, keyboardRow2)));
+        bot.execute(response);
     }
 }
