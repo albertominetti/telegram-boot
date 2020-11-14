@@ -21,7 +21,7 @@ import static java.util.Arrays.asList;
 public class GreetingsFeature implements Feature {
 
     @Autowired
-    AbsSender bot;
+    private AbsSender bot;
 
     private final Random rand = new Random();
 

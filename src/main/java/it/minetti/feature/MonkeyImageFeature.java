@@ -19,8 +19,9 @@ public class MonkeyImageFeature implements Feature {
 
     public static final String ACTION_TYPING = "typing";
     public static final String ACTION_UPLOAD_PHOTO = "upload_photo";
+
     @Autowired
-    AbsSender bot;
+    private AbsSender bot;
 
     @Override
     public boolean test(Message message, ChatInfo chatInfo) {

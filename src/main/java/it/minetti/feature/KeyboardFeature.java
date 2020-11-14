@@ -19,7 +19,7 @@ import static com.google.common.collect.Sets.newHashSet;
 public class KeyboardFeature implements Feature {
 
     @Autowired
-    AbsSender bot;
+    private AbsSender bot;
 
     private static final Set<String> TRIGGER_MESSAGES = newHashSet("keyboard");
 
