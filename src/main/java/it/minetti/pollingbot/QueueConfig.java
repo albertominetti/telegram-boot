@@ -18,7 +18,7 @@ import static java.lang.Math.max;
 @Configuration
 @ConditionalOnBean(PollingBot.class)
 public class QueueConfig {
-    public int poolSize = 1;
+    private int poolSize = 1;
 
     @PostConstruct
     public void setUp() {
@@ -35,9 +35,9 @@ public class QueueConfig {
     @Bean
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(poolSize);
+        executor.setCorePoolSize(poolSize / 2);
         executor.setMaxPoolSize(poolSize);
-        executor.setQueueCapacity(1000);
+        executor.setQueueCapacity(poolSize * 2);
         executor.setThreadNamePrefix("thread-");
         executor.initialize();
         return executor;
