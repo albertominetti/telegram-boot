@@ -82,7 +82,7 @@ public class FeaturesEntryPoint {
                     .map(User::getLanguageCode).map(Locale::new).orElse(ENGLISH));
 
             if (chatId.isPresent()) {
-                repository.save(chatInfo);
+                chatInfo = repository.save(chatInfo);
             }
         }
         return chatInfo;
