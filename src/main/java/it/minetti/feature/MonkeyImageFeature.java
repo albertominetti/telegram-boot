@@ -39,11 +39,13 @@ public class MonkeyImageFeature implements Feature {
 
         Message message = update.getMessage();
         String chatId = "" + message.getChatId();
+
         bot.execute(new SendChatAction(chatId, ACTION_TYPING));
         Thread.sleep(200);
         bot.execute(new SendMessage(chatId, bundle.getString("you.monkey")));
-        Thread.sleep(500);
+
         bot.execute(new SendChatAction(chatId, ACTION_UPLOAD_PHOTO));
+        Thread.sleep(500);
         bot.execute(new SendPhoto(chatId, new InputFile(
                 this.getClass().getResourceAsStream("/images/1473231766-scimmia.jpg"), bundle.getString("monkey"))
         ));
