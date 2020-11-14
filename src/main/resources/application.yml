@@ -10,6 +10,8 @@ management:
 spring:
   liquibase:
     change-log: classpath:db/liquibase/db.changelog-master.xml
+  jpa:
+    open-in-view: false
 
 logging:
   level:

@@ -6,7 +6,11 @@ spring:
   h2:
     console:
       enabled: true
+  output:
+    ansi:
+      enabled: ALWAYS
 
-
-
+logging:
+  pattern:
+    console: '%clr(%d{HH:mm:ss.SSS}){faint} %clr(%-5p) %clr(---){faint} %clr([%15.15t]){magenta} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %clr(%m){faint}%n'
 
