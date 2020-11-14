@@ -1,19 +1,19 @@
 package it.minetti.feature;
 
+import it.minetti.persistence.ChatInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 
@@ -26,10 +26,9 @@ public class GreetingsFeature implements Feature {
     private final Random rand = new Random();
 
     @Override
-    public boolean test(Update update, String status, Locale userLocale) {
-        if (status == null && update.hasMessage() && update.getMessage().hasText()) {
-            ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
-            Message message = update.getMessage();
+    public boolean test(Message message, ChatInfo chatInfo) {
+        if (chatInfo.getStatus() == null && message.hasText()) {
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             String text = message.getText();
             List<String> triggers = asList(bundle.getString("hello.trigger").split(","));
             return triggers.contains(text.toLowerCase());
@@ -38,12 +37,11 @@ public class GreetingsFeature implements Feature {
     }
 
     @Override
-    public void process(Update update, String status, Locale userLocale) throws TelegramApiException, InterruptedException {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
-        Message message = update.getMessage();
+    public void process(Message message, ChatInfo chatInfo) throws TelegramApiException, InterruptedException {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
         String chatId = "" + message.getChatId();
         bot.execute(new SendChatAction(chatId, "typing"));
-        Thread.sleep(200);
+        TimeUnit.MILLISECONDS.sleep(200);
         List<String> triggers = asList(bundle.getString("hello.trigger").split(","));
         String greeting = triggers.get(rand.nextInt(triggers.size()));
         greeting = StringUtils.capitalize(greeting) + "!";

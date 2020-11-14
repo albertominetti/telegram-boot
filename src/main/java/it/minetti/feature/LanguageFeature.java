@@ -3,25 +3,29 @@ package it.minetti.feature;
 import it.minetti.persistence.ChatInfo;
 import it.minetti.persistence.ChatRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.coyote.ActionHook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.text.MessageFormat.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Component
 public class LanguageFeature implements Feature {
+
+    public static final Set<String> AVAILABLE_LANGUAGES = newHashSet("it", "en");
 
     @Autowired
     private AbsSender bot;
@@ -31,37 +35,37 @@ public class LanguageFeature implements Feature {
 
 
     @Override
-    public boolean test(Update update, String status, Locale userLocale) {
-        if (status == null && update.hasMessage() && update.getMessage().hasText()) {
-            ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
-            Message message = update.getMessage();
+    public boolean test(Message message, ChatInfo chatInfo) {
+        if (chatInfo.getStatus() == null && message.hasText()) {
+            ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             String text = message.getText();
-            return StringUtils.containsIgnoreCase(text, bundle.getString("lang.trigger"));
+            return containsIgnoreCase(text, bundle.getString("lang.trigger"));
         }
         return false;
     }
 
     @Override
-    public void process(Update update, String status, Locale userLocale) throws TelegramApiException, InterruptedException {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", userLocale);
+    public void process(Message message, ChatInfo chatInfo) throws TelegramApiException {
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
 
-        Message message = update.getMessage();
         String chatId = "" + message.getChatId();
 
-        String languageText = bundle.getString("lang.trigger");
-        Pattern msgPattern = Pattern.compile(languageText + "\\s+([a-z]+)", CASE_INSENSITIVE);
+        String languageTrigger = bundle.getString("lang.trigger");
+        Pattern msgPattern = Pattern.compile(languageTrigger + "\\s+([a-z]+)", CASE_INSENSITIVE);
         Matcher matcher = msgPattern.matcher(message.getText());
         if (matcher.matches()) {
-            Locale newLocale = new Locale(matcher.group(1)); // check for possible exceptions
-            bot.execute(new SendMessage(chatId, format(bundle.getString("lang.done"), newLocale)));
-            Optional<ChatInfo> chatInfo = repository.findById(chatId); // TODO use the chatInfo already found in entry point
-            if (chatInfo.isPresent()) {
-                chatInfo.get().setLocale(newLocale);
-                repository.save(chatInfo.get());
+            String chosenLang = matcher.group(1);
+
+            if (AVAILABLE_LANGUAGES.contains(lowerCase(chosenLang))) {
+                Locale newLocale = new Locale(chosenLang);
+                bot.execute(new SendMessage(chatId, format(bundle.getString("lang.done"), newLocale)));
+                chatInfo.setLocale(newLocale);
+                repository.save(chatInfo);
+            } else {
+                bot.execute(new SendMessage(chatId, format(bundle.getString("lang.not_supported"))));
             }
         } else {
-            bot.execute(new SendMessage(chatId, "Sorry cannot understand. Please type '" + languageText + " en'" +
-                    " to setup your language, change en with your language"));
+            bot.execute(new SendMessage(chatId, format(bundle.getString("lang.help"), languageTrigger)));
         }
     }
 

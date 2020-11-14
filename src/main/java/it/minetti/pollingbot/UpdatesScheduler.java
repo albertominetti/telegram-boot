@@ -1,6 +1,6 @@
 package it.minetti.pollingbot;
 
-import it.minetti.feature.entrypoint.FeaturesEntryPoint;
+import it.minetti.feature.entrypoint.UpdateEntryPoint;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.concurrent.BlockingQueue;
 @ConditionalOnBean(PollingBot.class)
 public class UpdatesScheduler {
     @Autowired
-    private FeaturesEntryPoint entryPoint;
+    private UpdateEntryPoint entryPoint;
 
     @Autowired
     private BlockingQueue<Update> updatesQueue;

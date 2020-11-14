@@ -1,11 +1,11 @@
 package it.minetti.feature;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Locale;
+import it.minetti.persistence.ChatInfo;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public interface Feature {
-    boolean test(Update update, String status, Locale userLocale);
+    boolean test(Message message, ChatInfo chatInfo);
 
-    void process(Update update, String status, Locale userLocale) throws Exception;
+    void process(Message message, ChatInfo chatInfo) throws TelegramApiException, InterruptedException;
 }
