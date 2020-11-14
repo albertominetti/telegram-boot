@@ -7,8 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.Instant;
 import java.util.Locale;
-import java.util.StringJoiner;
 
 @NoArgsConstructor
 @Data
@@ -26,12 +26,14 @@ public class ChatInfo {
     @Column(name = "LOCALE")
     private Locale locale;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", ChatInfo.class.getSimpleName() + "[", "]")
-                .add("chatId='" + chatId + "'")
-                .add("status='" + status + "'")
-                .add("locale='" + locale + "'")
-                .toString();
-    }
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+    @Column(name = "LAST_NAME")
+    private String lastName;
+    @Column(name = "USER_NAME")
+    private String userName;
+
+    @Column(name = "FIRST_SEEN")
+    private Instant firstSeen;
+
 }

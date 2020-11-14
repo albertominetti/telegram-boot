@@ -25,4 +25,21 @@
         </rollback>
     </changeSet>
 
+    <changeSet author="Alberto" id="more-chat-data">
+        <addColumn tableName="CHAT">
+            <column name="FIRST_NAME" type="VARCHAR(32)"/>
+            <column name="LAST_NAME" type="VARCHAR(32)"/>
+            <column name="USER_NAME" type="VARCHAR(32)"/>
+            <column name="FIRST_SEEN" type="TIMESTAMP"/>
+            <column name="LAST_SEEN" type="TIMESTAMP"/>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="CHAT" dropColumn="FIRST_NAME"/>
+            <dropColumn tableName="CHAT" dropColumn="LAST_NAME"/>
+            <dropColumn tableName="CHAT" dropColumn="USER_NAME"/>
+            <dropColumn tableName="CHAT" dropColumn="FIRST_SEEN"/>
+            <dropColumn tableName="CHAT" dropColumn="LAST_SEEN"/>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>
