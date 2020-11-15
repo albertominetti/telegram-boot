@@ -14,6 +14,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+
 @Component
 public class MonkeyImageFeature implements Feature {
 
@@ -28,7 +30,8 @@ public class MonkeyImageFeature implements Feature {
         if (chatInfo.getStatus() == null && message.hasText()) {
             ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             String text = message.getText();
-            return bundle.getString("monkey").equalsIgnoreCase(text);
+            return equalsIgnoreCase(text, bundle.getString("monkey.trigger"))
+                    || equalsIgnoreCase(text, "/monkey");
         }
         return false;
     }
@@ -41,12 +44,12 @@ public class MonkeyImageFeature implements Feature {
 
         bot.execute(new SendChatAction(chatId, ACTION_TYPING));
         TimeUnit.MILLISECONDS.sleep(200);
-        bot.execute(new SendMessage(chatId, bundle.getString("you.monkey")));
+        bot.execute(new SendMessage(chatId, bundle.getString("monkey.you")));
 
         bot.execute(new SendChatAction(chatId, ACTION_UPLOAD_PHOTO));
         TimeUnit.MILLISECONDS.sleep(500);
         bot.execute(new SendPhoto(chatId, new InputFile(
-                this.getClass().getResourceAsStream("/images/1473231766-scimmia.jpg"), bundle.getString("monkey"))
+                this.getClass().getResourceAsStream("/images/1473231766-scimmia.jpg"), bundle.getString("monkey.trigger"))
         ));
     }
 
