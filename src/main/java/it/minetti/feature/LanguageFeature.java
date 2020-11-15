@@ -2,8 +2,6 @@ package it.minetti.feature;
 
 import it.minetti.persistence.ChatInfo;
 import it.minetti.persistence.ChatRepository;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.coyote.ActionHook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,7 +18,8 @@ import java.util.regex.Pattern;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.text.MessageFormat.format;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
+import static org.apache.commons.lang3.StringUtils.startsWith;
 
 @Component
 public class LanguageFeature implements Feature {
@@ -39,7 +38,7 @@ public class LanguageFeature implements Feature {
         if (chatInfo.getStatus() == null && message.hasText()) {
             ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             String text = message.getText();
-            return containsIgnoreCase(text, bundle.getString("lang.trigger"));
+            return startsWith(text, bundle.getString("lang.trigger"));
         }
         return false;
     }
@@ -48,7 +47,7 @@ public class LanguageFeature implements Feature {
     public void process(Message message, ChatInfo chatInfo) throws TelegramApiException {
         ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
 
-        String chatId = "" + message.getChatId();
+        String chatId = chatInfo.getChatId();
 
         String languageTrigger = bundle.getString("lang.trigger");
         Pattern msgPattern = Pattern.compile(languageTrigger + "\\s+([a-z]+)", CASE_INSENSITIVE);
