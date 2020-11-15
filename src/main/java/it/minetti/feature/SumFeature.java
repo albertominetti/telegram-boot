@@ -49,11 +49,9 @@ public class SumFeature implements Feature {
         ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
 
         String chatId = chatInfo.getChatId();
-
         String sumTrigger = bundle.getString("sum.trigger");
-
         String text = message.getText();
-        if (equalsIgnoreCase(text, sumTrigger)) {
+        if (chatInfo.getStatus() == null && equalsIgnoreCase(text, sumTrigger)) {
             totals.put(chatId, ZERO);
             chatInfo.setStatus(SUM);
             repository.save(chatInfo);
@@ -61,7 +59,7 @@ public class SumFeature implements Feature {
             return;
         }
 
-        if (equalsIgnoreCase(text, bundle.getString("sum.stop"))) {
+        if (SUM.equals(chatInfo.getStatus()) && equalsIgnoreCase(text, bundle.getString("sum.stop"))) {
             endFeature(chatInfo);
             bot.execute(new SendMessage(chatId, bundle.getString("sum.done")));
             return;
