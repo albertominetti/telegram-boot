@@ -39,7 +39,7 @@ public class SumFeature implements Feature {
         if (chatInfo.getStatus() == null && message.hasText()) {
             ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             String text = message.getText();
-            return equalsIgnoreCase(text, bundle.getString("sum.trigger"));
+            return equalsIgnoreCase(text, bundle.getString("sum.trigger")) || equalsIgnoreCase(text, "/sum");
         }
         return false;
     }
@@ -51,7 +51,7 @@ public class SumFeature implements Feature {
         String chatId = chatInfo.getChatId();
         String sumTrigger = bundle.getString("sum.trigger");
         String text = message.getText();
-        if (chatInfo.getStatus() == null && equalsIgnoreCase(text, sumTrigger)) {
+        if (chatInfo.getStatus() == null && (equalsIgnoreCase(text, sumTrigger) || equalsIgnoreCase(text, "/sum"))) {
             totals.put(chatId, ZERO);
             chatInfo.setStatus(SUM);
             repository.save(chatInfo);
@@ -65,16 +65,18 @@ public class SumFeature implements Feature {
             return;
         }
 
-        try {
-            text = text.replace(',', '.');
-            BigDecimal value = new BigDecimal(text);
-            BigDecimal newTotal = totals.computeIfPresent(chatId, (k, t) -> t.add(value));
-            newTotal = newTotal.stripTrailingZeros();
-            bot.execute(new SendMessage(chatId, format(bundle.getString("sum.total"), newTotal)));
-        } catch (IllegalArgumentException e) {
-            chatInfo.setStatus(null);
-            repository.save(chatInfo);
-            bot.execute(new SendMessage(chatId, bundle.getString("sum.error")));
+        if (SUM.equals(chatInfo.getStatus())) {
+            try {
+                text = text.replace(',', '.');
+                BigDecimal value = new BigDecimal(text);
+                BigDecimal newTotal = totals.computeIfPresent(chatId, (k, t) -> t.add(value));
+                newTotal = newTotal.stripTrailingZeros();
+                bot.execute(new SendMessage(chatId, format(bundle.getString("sum.total"), newTotal)));
+            } catch (IllegalArgumentException e) {
+                chatInfo.setStatus(null);
+                repository.save(chatInfo);
+                bot.execute(new SendMessage(chatId, bundle.getString("sum.error")));
+            }
         }
 
     }
