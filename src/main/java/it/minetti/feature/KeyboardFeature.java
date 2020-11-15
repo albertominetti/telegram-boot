@@ -15,6 +15,7 @@ import java.util.Set;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newHashSet;
 
+@Deprecated
 @Component
 public class KeyboardFeature implements Feature {
 
