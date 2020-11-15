@@ -47,6 +47,9 @@ public class UpdateEntryPoint {
         ChatInfo chatInfo = retrieveChatInfo(message);
         log.debug("Chat info: {}", chatInfo);
 
+
+        ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
+
         boolean processed = false;
         for (Feature feature : features) {
             try {
@@ -57,12 +60,12 @@ public class UpdateEntryPoint {
                 }
             } catch (Exception e) {
                 log.error("Processing failed due to error", e);
+                bot.execute(new SendMessage(chatInfo.getChatId(), bundle.getString("error.in.processing")));
             }
         }
 
         if (!processed) {
             log.warn("Message not supported: {}", update);
-            ResourceBundle bundle = ResourceBundle.getBundle("messages", chatInfo.getLocale());
             SendMessage response = new SendMessage(chatInfo.getChatId(), bundle.getString("not.understand"));
             response.setReplyMarkup(new ReplyKeyboardRemove(true));
             bot.execute(response);
