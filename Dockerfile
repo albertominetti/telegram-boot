@@ -5,7 +5,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
 
-FROM openjdk:11.0.7-jre-slim
+FROM gcr.io/distroless/java:11
 COPY --from=build /home/app/target/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar", "--spring.profiles.active=dev"]
