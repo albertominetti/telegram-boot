@@ -25,7 +25,7 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 @Component
 public class HelpFeature implements Feature {
 
-    public static final int KEYBOARD_MAX_COLUMNS = 2;
+    public static final int KEYBOARD_MAX_COLUMNS = 3;
 
     @Autowired
     private AbsSender bot;
@@ -48,7 +48,9 @@ public class HelpFeature implements Feature {
         List<String> commands = asList(
                 bundle.getString("lang.trigger"),
                 bundle.getString("sum.trigger"),
-                bundle.getString("monkey.trigger")
+                bundle.getString("monkey.trigger"),
+                bundle.getString("hello.trigger").split(",")[0],
+                bundle.getString("kitten.trigger").split(",")[0]
         );
         String commaSeparatedCommands = String.join(", ", commands);
 
