@@ -1,11 +1,15 @@
 package it.minetti;
 
+import it.minetti.persistence.ChatRepository;
 import it.minetti.pollingbot.PollingBotConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +30,13 @@ import static org.springframework.http.HttpStatus.OK;
         "BOT_TOKEN=123456",
         "BOT_NAME=for_test_bot"
 })
+@EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 @ContextConfiguration(classes = BotApplicationIT.SmokeConfig.class)
+@MockBeans({
+        @MockBean(PollingBotConfig.class),
+        @MockBean(ChatRepository.class)
+})
 class BotApplicationIT {
-
-    @MockBean
-    private PollingBotConfig pollingBotConfig;
 
     @Autowired
     TestRestTemplate template;
